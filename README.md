@@ -1,5 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# React High-Concurrency Seat Booking Simulator
 
+A frontend system-design focused ticket booking interface that simulates real-world concurrency conflicts using polling-based server state updates.
+
+Tech stack:
+- React
+- TypeScript
+- React Query
+- Context + useReducer
+- Mock API with mutation engine
 ## Getting Started
 
 First, run the development server:
