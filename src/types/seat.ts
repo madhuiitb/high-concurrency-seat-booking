@@ -26,6 +26,6 @@ export interface Seat {
     number: number
     tier: SeatTier
     status: SeatStatus
-    price: number
-    reservedUntil?: number | null
+    price: number,
+    reservedUntil: number | null
 }
