@@ -1,6 +1,7 @@
 /**
  * 
  Seats persist between API calls.
+ Persistent in-memory database
  */
 
 import { Seat } from "@/types/seat";
