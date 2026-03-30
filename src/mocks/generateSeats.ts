@@ -1,14 +1,14 @@
 /**
  * 
  Generating Mock seats 
- Rows 15 
- Seats in each row 12
+ Rows 10 
+ Seats in each row 8
  */
 
 import { Seat, SeatStatus, SeatTier } from "@/types/seat";
 
-const ROWS = 15;
-const SEATS_PER_ROW = 12;
+const ROWS = 10;
+const SEATS_PER_ROW = 8;
 
 export function generateSeats(): Seat[] {
     const seats: Seat[] = [];
@@ -19,10 +19,10 @@ export function generateSeats(): Seat[] {
             let tierPrice: number = 150;
             const seatAvailability: SeatStatus = Math.random() < 0.1 ? "reserved" : "available";
 
-            if(row <= 3) {
+            if(row <= 2) {
                 tierStatus = "VIP";
                 tierPrice = 350;
-            }else if (row <= 8) {
+            }else if (row <= 5) {
                 tierStatus = "PREMIUM";
                 tierPrice = 200;
             }
