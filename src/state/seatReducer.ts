@@ -13,14 +13,15 @@ export interface SeatState {
 
 // These represent user intent, not UI behavior.
 
-export type SeatAction = 
-    | { type: "SELECT_SEAT", payload: string }
-    | { type: "DESELECT_SEAT"; payload: string }
-    | { type: "CLEAR_SELECTION" }
-    | { type: "START_TIMER"; payload: number }
-    | { type: "TICK_TIMER" }
-    | { type: "EXPIRE_SELECTION" }
-    | { type: "RESERVE_SEAT"}
+export type SeatAction =
+  | { type: "SELECT_SEAT"; payload: string }
+  | { type: "DESELECT_SEAT"; payload: string }
+  | { type: "CLEAR_SELECTION" }
+  | { type: "START_TIMER"; payload: number }
+  | { type: "TICK_TIMER" }
+  | { type: "EXPIRE_SELECTION" }
+    | { type: "RESERVE_SEAT" }
+    | { type: "REMOVE_CONFLICTED_SEATS"; payload: string[] };
     
 
 export function seatReducer(state: SeatState, action: SeatAction): SeatState {
@@ -68,6 +69,11 @@ export function seatReducer(state: SeatState, action: SeatAction): SeatState {
                 reservedSeats: [...state.reservedSeats, ...state.selectedSeats],
                 selectedSeats: [],
                 timer:null,
+            }
+        case "REMOVE_CONFLICTED_SEATS":
+            return {
+                ...state,
+                selectedSeats:state.selectedSeats.filter((seatId)=>!action.payload.includes(seatId))
             }
         default:
             return state;

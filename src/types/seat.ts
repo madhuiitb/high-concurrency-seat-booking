@@ -21,11 +21,11 @@ export type SeatTier =
     | "CLASSIC"
 
 export interface Seat {
-    id: string
-    row: number
-    number: number
-    tier: SeatTier
-    status: SeatStatus
-    price: number,
-    reservedUntil: number | null
+  id: string;
+  row: number;
+  column: number;
+  price: number;
+  tier: SeatTier;
+  status: SeatStatus;
+  reservedUntil: number | null;
 }
