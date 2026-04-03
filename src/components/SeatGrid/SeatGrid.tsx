@@ -10,6 +10,11 @@ import { Fragment, useEffect } from "react"
 import { useSeatState } from "@/state/useSeatState"
 import { toast } from "sonner"
 import SeatCell from "./SeatCell"
+import SeatLegend from "./SeatLegend"
+import SeatSelectionSummary from "./SeatSelectionSummary"
+import { Router } from "next/router"
+import { useRouter } from "next/navigation"
+import useSelectedSeats from "@/hooks/useSelectedSeats"
 
 
 export default function SeatGrid() {
@@ -19,6 +24,10 @@ export default function SeatGrid() {
         queryFn: fetchSeats,
         refetchInterval:5000,
     })
+  
+  const { selectedSeats } = useSelectedSeats()
+
+  const router = useRouter();
 
     useEffect(() => {
         if (!seats) {
@@ -48,43 +57,56 @@ export default function SeatGrid() {
   const groupedSeats = groupSeatsByRow(seats ?? []);
   const columnNumbers = groupedSeats.at(0)?.seats.map((seat) => seat.column) ?? [];
 
-  const gridTemplate = `40px repeat(${columnNumbers.length}, 48px)`;
+  const gridTemplate = `36px repeat(${columnNumbers.length}, 42px)`;
   
+  const hasSelection = selectedSeats.length>0;
   return (
-    <div
-      className="grid gap-2"
-      style={{
-        gridTemplateColumns: gridTemplate,
-        justifyContent: "center",
-      }}
-    >
-      {/* spacer */}
-      <div />
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex gap-8 items-center">
+        <div
+          className="grid gap-2"
+          style={{
+            gridTemplateColumns: gridTemplate,
+          }}
+        >
+          {/* spacer */}
+          <div />
 
-      {/* column numbers */}
-      {columnNumbers.map((col) => (
-        <div key={col} className="text-center font-semibold">
-          {col}
-        </div>
-      ))}
-
-      {/* rows */}
-      {groupedSeats.map((group) => {
-        const rowLabel = String.fromCharCode(65 + Number(group.row));
-        return (
-          <Fragment key={group.row}>
-            {/** Row Label */}
-            <div key={group.row} className="mt-2 text-center font-semibold">
-              {rowLabel}
+          {columnNumbers.map((col) => (
+            <div key={col} className="text-center font-semibold text-white">
+              {col}
             </div>
+          ))}
 
-            {group.seats.map((seat) => (
-              <SeatCell key={seat.id} seat={seat} />
-            ))}
-          </Fragment>
-        );
-      })}
+          {groupedSeats.map((group) => {
+            const rowLabel = String.fromCharCode(65 + Number(group.row));
+            return (
+              <Fragment key={group.row}>
+                {/** Row Label */}
+                <div
+                  key={group.row}
+                  className="flex items-center justify-center font-semibold text-white"
+                >
+                  {rowLabel}
+                </div>
 
+                {group.seats.map((seat) => (
+                  <SeatCell key={seat.id} seat={seat} />
+                ))}
+              </Fragment>
+            );
+          })}
+        </div>
+        {hasSelection && <SeatSelectionSummary />}
+      </div>
+      <SeatLegend />
+      {hasSelection &&
+        <button
+          onClick={() => router.push("/checkout")}
+          className="m-4 bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-md w-full"
+        >
+          Proceed to checkout
+        </button>}
     </div>
   );
 }

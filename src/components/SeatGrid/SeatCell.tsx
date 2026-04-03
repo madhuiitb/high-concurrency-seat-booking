@@ -17,36 +17,40 @@ export default function SeatCell({ seat }: SeatProps) {
             type: isSelected ? "DESELECT_SEAT" : "SELECT_SEAT",
             payload:seat.id
         })
-    }
+  }
   
-    function getColor() {
+  const tierColorMap = {
+    VIP: "bg-amber-600 text-white",
+    PREMIUM: "bg-blue-800 text-white",
+    CLASSIC: "bg-cyan-600 text-white",
+  };
+  
+    function getSeatStyle() {
       if (isReserved) {
-          return "bg-gray-400 cursor-not-allowed"
+        return "bg-gray-400 cursor-not-allowed";
       }
       if (isSelected) {
-        return "bg-green-500";
+        return "bg-green-600 text-white ring-2 ring-green-300 animate-seatPulse";
       }
-      if (seat.tier === "VIP") {
-        return "bg-amber-400";
-      }
-       if (seat.tier === "PREMIUM") {
-         return "bg-blue-500";
-       }
-       if (seat.tier === "CLASSIC") {
-         return "bg-cyan-500";
-       }
-    
-      return "bg-gray-200";
+      return tierColorMap[seat.tier];
     }
 
     return (
       <button
+        title={`Seat ${seat.id}.₹${seat.price}`}
         onClick={handleClick}
-        disabled={seat.status !== "available"}
-        className={`w-10 h-10 rounded ${getColor()}`}
-        >
-        {seat.row}
-        {seat.column}
+        disabled={isReserved}
+        aria-label={`Seat ${seat.id}`}
+        className={`
+          flex flex-col items-center justify-center
+          w-8 h-8 rounded-md
+          transition-all duration-200 ease-out
+          hover:scale-110
+          active:scale-95
+          ${getSeatStyle()}
+          `}
+      >
+        <span className="text-[12px] font-bold leading-none">{seat.id}</span>
       </button>
     );
 }
