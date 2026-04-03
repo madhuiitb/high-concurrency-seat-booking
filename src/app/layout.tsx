@@ -13,7 +13,7 @@ export default function RootLayout({
     <html
       lang="en"
     >
-      <body className="min-h-full flex flex-col">
+      <body className="bg-black h-full flex flex-col">
         <QueryProvider>
           <SeatProvider>
             {children}
