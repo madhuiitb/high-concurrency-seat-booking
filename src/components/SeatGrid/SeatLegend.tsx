@@ -16,7 +16,7 @@ export default function SeatLegend() {
         </div>
         <div className="flex items-center gap-1">
           <div className="w-4 h-4 bg-gray-400 rounded-lg" />
-          Reserved
+          Unavailable
         </div>
         <div className="flex items-center gap-1">
           <div className="w-4 h-4 bg-green-600 rounded-lg" />

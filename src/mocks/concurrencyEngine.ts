@@ -6,11 +6,26 @@ import { getSeats, updateSeats } from "./seatStore";
 export function simulateSeatConflicts() {
     const seats = [...getSeats()];
 
-    const availableSeats = seats.filter((seat) => seat.status === "available");
+    const candidates = seats.filter((seat) => seat.status === "available" || seat.status === "selected");
+    
+    if (!candidates.length) {
+        return [];
+    }
 
-    const randomSeats = availableSeats.sort(() => 0.5 - Math.random()).slice(0, 2);
+    const numberToBlock = Math.floor(Math.random() * 2) + 1;
 
-    randomSeats.forEach((seat) => seat.status = "reserved");
+    const randomSeats = candidates
+      .sort(() => 0.5 - Math.random())
+        .slice(0, numberToBlock);
+    
+    const conflictedSeatIds: string[] = [];
+
+    randomSeats.forEach((seat) => {
+        seat.status = "unavailable";
+        seat.reservedUntil = null;
+        conflictedSeatIds.push(seat.id);
+    });
     
     updateSeats(seats);
+    return conflictedSeatIds;
 }

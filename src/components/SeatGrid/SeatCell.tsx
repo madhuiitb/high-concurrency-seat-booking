@@ -7,16 +7,18 @@ interface SeatProps{
 export default function SeatCell({ seat }: SeatProps) {
     const { state, dispatch } = useSeatState();
   const isSelected = state.selectedSeats.includes(seat.id);
-  const isReserved = seat.status === "reserved";
+  const isUnavailable = seat.status === "reserved" || seat.status==="unavailable";
 
   const handleClick = () => {
-    if (isReserved) {
+    if (seat.status!=="available") {
       return;
-        }
-        dispatch({
-            type: isSelected ? "DESELECT_SEAT" : "SELECT_SEAT",
-            payload:seat.id
-        })
+    }
+    dispatch({
+      type: isSelected
+        ? "DESELECT_SEAT"
+        : "SELECT_SEAT",
+      payload: seat.id
+    });
   }
   
   const tierColorMap = {
@@ -26,7 +28,7 @@ export default function SeatCell({ seat }: SeatProps) {
   };
   
     function getSeatStyle() {
-      if (isReserved) {
+      if (isUnavailable) {
         return "bg-gray-400 cursor-not-allowed";
       }
       if (isSelected) {
@@ -39,7 +41,7 @@ export default function SeatCell({ seat }: SeatProps) {
       <button
         title={`Seat ${seat.id}.₹${seat.price}`}
         onClick={handleClick}
-        disabled={isReserved}
+        disabled={isUnavailable}
         aria-label={`Seat ${seat.id}`}
         className={`
           flex flex-col items-center justify-center
