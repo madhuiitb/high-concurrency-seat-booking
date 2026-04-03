@@ -3,9 +3,8 @@ import { Seat } from "@/types/seat";
 
 interface SeatProps{
     seat: Seat,
-    row:string,
 }
-export default function SeatCell({ seat,row }: SeatProps) {
+export default function SeatCell({ seat }: SeatProps) {
     const { state, dispatch } = useSeatState();
   const isSelected = state.selectedSeats.includes(seat.id);
   const isReserved = seat.status === "reserved";
@@ -46,7 +45,7 @@ export default function SeatCell({ seat,row }: SeatProps) {
         disabled={seat.status !== "available"}
         className={`w-10 h-10 rounded ${getColor()}`}
         >
-        {row}
+        {seat.row}
         {seat.column}
       </button>
     );
