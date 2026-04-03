@@ -6,10 +6,10 @@
 import { fetchSeats } from "@/services/api/fetchSeats" // Frontend Service 
 import { groupSeatsByRow } from "@/utils/groupSeatsByRow"
 import { useQuery } from "@tanstack/react-query"
-import SeatRow from "./SeatRow"
-import { useEffect } from "react"
+import { Fragment, useEffect } from "react"
 import { useSeatState } from "@/state/useSeatState"
 import { toast } from "sonner"
+import SeatCell from "./SeatCell"
 
 
 export default function SeatGrid() {
@@ -46,11 +46,10 @@ export default function SeatGrid() {
     }
 
   const groupedSeats = groupSeatsByRow(seats ?? []);
-  const columnNumbers = groupedSeats[0]?.seats.map((seat) => seat.column) ?? [];
+  const columnNumbers = groupedSeats.at(0)?.seats.map((seat) => seat.column) ?? [];
 
   const gridTemplate = `40px repeat(${columnNumbers.length}, 48px)`;
   
-  console.log(seats)
   return (
     <div
       className="grid gap-2"
@@ -70,13 +69,22 @@ export default function SeatGrid() {
       ))}
 
       {/* rows */}
-      {groupedSeats.map((group, index) => (
-        <SeatRow
-          key={group.row}
-          seats={group.seats}
-          rowLabel={String.fromCharCode(65 + Number(group.row))}
-        />
-      ))}
+      {groupedSeats.map((group) => {
+        const rowLabel = String.fromCharCode(65 + Number(group.row));
+        return (
+          <Fragment key={group.row}>
+            {/** Row Label */}
+            <div key={group.row} className="mt-2 text-center font-semibold">
+              {rowLabel}
+            </div>
+
+            {group.seats.map((seat) => (
+              <SeatCell key={seat.id} seat={seat} />
+            ))}
+          </Fragment>
+        );
+      })}
+
     </div>
   );
 }
