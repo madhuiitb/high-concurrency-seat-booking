@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import QueryProvider from "@/providers/queryProvider";
 import { SeatProvider } from "@/providers/SeatProvider";
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

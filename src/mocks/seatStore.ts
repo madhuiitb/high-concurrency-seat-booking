@@ -6,14 +6,14 @@
 
 import { Seat } from "@/types/seat";
 import { generateSeats } from "./generateSeats";
-
+import "./concurrencyEngine";
 
 let seatStore: Seat[] = generateSeats();
 
 export function getSeats() {
-    return seatStore;
+    return seatStore.map(seat=>({...seat}));
 }
 
 export function updateSeats(newSeats: Seat[]) {
-    seatStore = newSeats;
+    seatStore = newSeats.map(seat=>({...seat}));
 }

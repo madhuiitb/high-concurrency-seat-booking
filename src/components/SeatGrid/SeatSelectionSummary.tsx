@@ -1,17 +1,20 @@
 import useSelectedSeats from "@/hooks/useSelectedSeats";
+import { useSeatState } from "@/state/useSeatState";
 
 export default function SeatSelectionSummary(){
 
+    const { state } = useSeatState();
     const { selectedSeats, totalPrice,groupByTier } = useSelectedSeats();
 
-    if (!selectedSeats.length) {
+    if (!state.selectedSeats.length && !state.reservedSeats.length ) {
         return null;
     }
 
-    console.log("Selected seats", selectedSeats);
+    console.log("Selected seats", selectedSeats, groupByTier, state.selectedSeats, state.reservedSeats);
+    
 
     return (
-      <div className="flex flex-col gap-6 p-5 rounded-xl shadow-md flex-1 max-w-sm border-2 border-lime-500 min-w-64">
+      <div className="flex flex-col gap-6 p-5 rounded-xl shadow-xl flex-1 max-w-sm border border-amber-50 min-w-64">
         <h2 className="font-semibold text-lg mb-2 text-white">
           Selected Seats
         </h2>

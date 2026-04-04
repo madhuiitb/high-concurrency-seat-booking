@@ -1,18 +1,38 @@
+import { getSeats, updateSeats } from "@/mocks/seatStore";
 
-
-/**
- * 
- * @param req 
- * @returns 
- * Later upgraded to:
-conflict simulation
-reservation timer logic
- */
 export async function POST(req: Request) {
-    const body = await req.json();
+  const { seatIds } = await req.json();
 
-    return Response.json({
-        success: true,
-        seatId:body.seatId,
-    })
+  const seats = getSeats();
+
+  const now = Date.now();
+
+  const reservedSeats: string[] = [];
+    const failedSeats: string[] = [];
+    
+    console.log("Reserving:", seatIds);
+    console.log("Updated seat store:", seats);
+
+  seatIds.forEach((id: string) => {
+    const seat = seats.find((seat) => seat.id === id);
+
+    if (!seat || seat.status !== "available") {
+      failedSeats.push(id);
+      return;
+    }
+
+    seat.status = "reserved";
+
+    seat.reservedUntil = now + 120000; // 2 minutes
+
+    reservedSeats.push(id);
+  });
+
+  updateSeats(seats);
+
+  return Response.json({
+    success: failedSeats.length === 0,
+    reservedSeats,
+    failedSeats,
+  });
 }

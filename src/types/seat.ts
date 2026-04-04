@@ -10,10 +10,11 @@
 
 
 export type SeatStatus =
-    | "available"
-    | "selected"
-    | "unavailable"
-    | "reserved"
+  | "available"
+  | "selected"
+  | "unavailable"
+  | "reserved"
+  | "booked";
 
 export type SeatTier =
     | "VIP"

@@ -6,15 +6,16 @@
 import { fetchSeats } from "@/services/api/fetchSeats" // Frontend Service 
 import { groupSeatsByRow } from "@/utils/groupSeatsByRow"
 import { useQuery } from "@tanstack/react-query"
-import { Fragment, useEffect } from "react"
+import { Fragment, use, useEffect } from "react"
 import { useSeatState } from "@/state/useSeatState"
 import { toast } from "sonner"
 import SeatCell from "./SeatCell"
 import SeatLegend from "./SeatLegend"
 import SeatSelectionSummary from "./SeatSelectionSummary"
-import { Router } from "next/router"
 import { useRouter } from "next/navigation"
 import useSelectedSeats from "@/hooks/useSelectedSeats"
+import useReservationTimer from "@/hooks/useReservationTimer"
+import ReservationTimer from "../common/ReservationTimer"
 
 
 export default function SeatGrid() {
@@ -22,10 +23,16 @@ export default function SeatGrid() {
     const { data: seats, isLoading } = useQuery({
         queryKey: ["seats"],
         queryFn: fetchSeats,
-        refetchInterval:5000,
+        refetchInterval:1000,
     })
   
   const { selectedSeats } = useSelectedSeats()
+
+  const earlyExpiry = state.reservedSeats.length > 0 ? Math.min(...state.reservedSeats.map(seat => seat.reservedUntil)) : undefined;
+
+  const remainingSeconds = useReservationTimer(earlyExpiry);
+
+  
 
   const router = useRouter();
 
@@ -48,7 +55,15 @@ export default function SeatGrid() {
             );
         }
 
-    },[seats,state.selectedSeats, dispatch])
+    }, [seats, state.selectedSeats, dispatch])
+  
+  useEffect(() => {
+    if (remainingSeconds === 0) {
+      dispatch({
+        type: "EXPIRE_SELECTION"
+      })
+    }
+  }, [remainingSeconds, dispatch]);
 
     if (isLoading) {
         return <div>Loading...</div>
@@ -59,7 +74,15 @@ export default function SeatGrid() {
 
   const gridTemplate = `36px repeat(${columnNumbers.length}, 42px)`;
   
-  const hasSelection = selectedSeats.length>0;
+  const hasSelection =
+    state.selectedSeats.length > 0 || state.reservedSeats.length > 0;
+  
+  console.log(
+    "summary: ",
+    hasSelection,
+    selectedSeats.length,
+    state.reservedSeats.length,
+  );
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="flex gap-8 items-center">
@@ -97,16 +120,21 @@ export default function SeatGrid() {
             );
           })}
         </div>
-        {hasSelection && <SeatSelectionSummary />}
+        <div className="flex flex-col justify-center gap-3">
+          {remainingSeconds > 0 && <ReservationTimer remainingSeconds={remainingSeconds} />
+          }
+          {hasSelection && <SeatSelectionSummary />}
+        </div>
       </div>
       <SeatLegend />
-      {hasSelection &&
+      {hasSelection && (
         <button
           onClick={() => router.push("/checkout")}
-          className="m-4 bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-md w-full"
+          className="m-4 bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-md w-full cursor-pointer"
         >
           Proceed to checkout
-        </button>}
+        </button>
+      )}
     </div>
   );
 }
