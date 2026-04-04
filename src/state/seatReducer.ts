@@ -20,8 +20,14 @@ export type SeatAction =
   | { type: "DESELECT_SEAT"; payload: string }
   | { type: "CLEAR_SELECTION" }
   | { type: "EXPIRE_SELECTION" }
-    | { type: "RESERVE_SEAT" }
-    | { type: "REMOVE_CONFLICTED_SEATS"; payload: string[] };
+    | {
+        type: "RESERVE_SEAT"; payload: {
+            id: string,
+            reservedUntil:number,
+    } }
+  | { type: "REMOVE_CONFLICTED_SEATS"; payload: string[] }
+  | { type: "BOOKING_SUCCESS" }
+    | { type: "CANCEL_RESERVATION"; payload: string }
     
 
 export function seatReducer(
@@ -30,17 +36,29 @@ export function seatReducer(
 ): SeatState {
     switch (action.type) {
         case "SELECT_SEAT":
-            if (state.selectedSeats.includes(action.payload) || state.reservedSeats.some((seat)=>seat.id===action.payload)) {
-                return state;
+            const now = Date.now();
+            const activeReservations = state.reservedSeats.filter(seat => seat.reservedUntil > now);
+
+            const alreadyReserved = activeReservations.some(seat => seat.id === action.payload);
+
+            if (
+              state.selectedSeats.includes(action.payload) || alreadyReserved) {
+                return {
+                  ...state,
+                  reservedSeats: activeReservations
+                };
             }
             return {
                 ...state,
+                reservedSeats:activeReservations,
                 selectedSeats: [...state.selectedSeats, action.payload]
             };
         case "DESELECT_SEAT":
             return {
                 ...state,
-                selectedSeats:state.selectedSeats.filter((seat)=>seat!==action.payload)
+                selectedSeats: state.selectedSeats.filter((seat) => seat !== action.payload),
+                reservedSeats: state.reservedSeats.filter(
+      seat => seat.id !== action.payload)
             }
         case "CLEAR_SELECTION": 
             return {
@@ -49,24 +67,35 @@ export function seatReducer(
             }
     
         case "EXPIRE_SELECTION": 
-            const now = Date.now();
+            const currentTime = Date.now();
             return {
                 ...state,
-                reservedSeats: state.reservedSeats.filter((seat)=>seat.reservedUntil && seat.reservedUntil > now)
+                reservedSeats: state.reservedSeats.filter((seat)=>seat.reservedUntil > currentTime)
             }
         case "RESERVE_SEAT":
-            const expirationTime = Date.now() + 5 * 60 * 1000;
+            const activeReserved = state.reservedSeats.filter(seat => seat.reservedUntil > Date.now());
             
             return {
                 ...state,
-                reservedSeats: [...state.reservedSeats,
-                    ...state.selectedSeats.map(id => ({ id, reservedUntil: expirationTime }))],
-                selectedSeats:[]
+                reservedSeats: [...activeReserved,
+                    action.payload],
+                selectedSeats:state.selectedSeats.filter(id=>id!==action.payload.id)
             }
         case "REMOVE_CONFLICTED_SEATS":
             return {
                 ...state,
                 selectedSeats:state.selectedSeats.filter((seatId)=>!action.payload.includes(seatId))
+            }
+        case "BOOKING_SUCCESS":
+            return {
+                selectedSeats: [],
+                reservedSeats: []
+            }
+        case "CANCEL_RESERVATION":
+            return {
+                ...state,
+                reservedSeats: state.reservedSeats.filter(seat => seat.id !== action.payload),
+                selectedSeats:state.selectedSeats.filter(id=>id!==action.payload)
             }
         default:
             return state;

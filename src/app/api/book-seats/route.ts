@@ -5,16 +5,28 @@ export async function POST(req: Request) {
 
   const seats = getSeats();
 
+  const bookedSeats: string[] = [];
+  const failedSeats: string[] = [];
+
   seatIds.forEach((id: string) => {
     const seat = seats.find((seat) => seat.id === id);
 
-    if (!seat) return;
+    if (!seat || seat.status !== "reserved") {
+      failedSeats.push(id);
+      return;
+    }
 
-    seat.status = "available";
+    seat.status = "booked";
     seat.reservedUntil = null;
+
+    bookedSeats.push(id);
   });
 
   updateSeats(seats);
 
-  return Response.json({ success: true });
+  return Response.json({
+    success: failedSeats.length === 0,
+    bookedSeats,
+    failedSeats,
+  });
 }

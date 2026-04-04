@@ -12,7 +12,10 @@ export default function useSelectedSeats() {
         queryFn: fetchSeats,
     });
 
-    const selectedSeats = seats?.filter((seat) => state.selectedSeats.includes(seat.id)) ?? [];
+    const selectedSeatIds = [...state.selectedSeats, ...state.reservedSeats.map((seat) => seat.id)];
+
+    const selectedSeats =
+      seats?.filter((seat) => selectedSeatIds.includes(seat.id)) ?? [];
     
     const groupByTier = selectedSeats.reduce((acc, seat) => {
         if (!acc[seat.tier]) {
