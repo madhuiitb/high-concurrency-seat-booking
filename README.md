@@ -1,20 +1,20 @@
-```md
+
 # High Concurrency Seat Booking Simulator
 
 A frontend-focused system design project that simulates
 a real-world ticket booking experience under high concurrency conditions.
 
 This project demonstrates how modern booking platforms
--prevent double booking,
--manage temporary seat reservations, and
--handle seat conflicts when multiple users attempt to reserve the same seats simultaneously.
+prevent double booking,
+manage temporary seat reservations, and
+handle seat conflicts when multiple users attempt to reserve the same seats simultaneously.
 
 🔗 Live Demo:
 https://high-concurrency-seat-booking.vercel.app/seat-map
 
 ---
 
-## 🚀 Features
+## Features
 
 - Interactive seat map UI
 - Seat selection & deselection flow
@@ -29,7 +29,7 @@ https://high-concurrency-seat-booking.vercel.app/seat-map
 
 ---
 
-## 🧠 System Design Concepts Demonstrated
+## System Design Concepts Demonstrated
 
 This project focuses on frontend architecture patterns used in high-concurrency booking systems such as:
 
@@ -50,7 +50,7 @@ These patterns are commonly used in:
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 - Next.js (App Router)
 - React
@@ -114,7 +114,7 @@ Architecture highlights:
 
 ---
 
-## 🔄 Booking Flow
+## Booking Flow
 
 ```
 
@@ -147,7 +147,7 @@ Toast warning displayed
 
 ---
 
-## ⚡ Reservation Conflict Simulation
+##  Reservation Conflict Simulation
 
 The system simulates real-world concurrency conditions by:
 
@@ -160,7 +160,7 @@ This mirrors production seat-locking strategies used in large-scale booking plat
 
 ---
 
-## 🖥️ Local Development
+##  Local Development
 
 Clone the repository:
 
@@ -196,7 +196,7 @@ Visit:
 
 ---
 
-## 📦 Deployment
+##  Deployment
 
 Deployed using Vercel:
 
@@ -208,7 +208,7 @@ Deployed using Vercel:
 
 ---
 
-## 🎯 Learning Goals of This Project
+##  Learning Goals of This Project
 
 This project demonstrates:
 
@@ -220,7 +220,7 @@ This project demonstrates:
 
 ---
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 Possible production-ready extensions:
 
