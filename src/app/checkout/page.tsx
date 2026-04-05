@@ -4,41 +4,42 @@ import { useSeatState } from "@/state/useSeatState";
 import { redirect, useRouter } from "next/navigation";
 import useSelectedSeats from "@/hooks/useSelectedSeats";
 import SeatSelectionSummary from "@/components/SeatGrid/SeatSelectionSummary";
+import { useEffect } from "react";
 
 export default function Checkout() {
     const { state, dispatch } = useSeatState();
     const { selectedSeats} = useSelectedSeats();
     const router = useRouter();
 
-    if (!selectedSeats.length) {
-        redirect('/seat-map')
-    }
+     useEffect(() => {
+       if (!selectedSeats.length) {
+         router.replace("/seat-map");
+       }
+     }, [selectedSeats, router]);
 
-    async function handleConfirmBooking() {
-        const response = await fetch('/api/book-seats', {
-            method: "POST",
-            body: JSON.stringify({
-                seatIds: state.reservedSeats.map(seat => seat.id)
-            })
-        });
+   async function handleConfirmBooking() {
+     const reservedSeatIds = state.reservedSeats.map((seat) => seat.id);
 
-        console.log("Booking seats");
+     console.log("Mock booking seats:", reservedSeatIds);
 
+     // Backend code. 
+    //  await new Promise((resolve) => setTimeout(resolve, 100));
 
-        const result = await response.json();
+    //  const failedSeats = reservedSeatIds.filter(() => Math.random() < 0.05);
 
-        if (result.success) {
-            dispatch({
-                type: "BOOKING_SUCCESS"
-            });
+    //  if (failedSeats.length) {
+    //    console.log(`Some seats failed: ${failedSeats.join(", ")}`);
 
-            router.push("/confirmation");
-        } else {
+    //    alert(`Seats unavailable: ${failedSeats.join(", ")}`);
 
-            console.log(`Some seats failed: ${result.failedSeats.join(", ")}`);
-        }
-    }
-
+    //    return;
+    //  }
+     dispatch({
+       type: "BOOKING_SUCCESS",
+     });
+    redirect("/confirmation");
+     
+   }
 
   return (
     <div className="flex flex-col items-center bg-black w-full  mx-auto p-6">
@@ -49,7 +50,7 @@ export default function Checkout() {
       {/* Confirm button */}
       <button
         onClick={handleConfirmBooking}
-        className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-md cursor-progress"
+        className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-md cursor-pointer"
       >
         Confirm Booking
       </button>

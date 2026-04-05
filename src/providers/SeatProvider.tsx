@@ -13,7 +13,7 @@ import {
     SeatState
 } from "@/state/seatReducer";
 import { useQueryClient } from "@tanstack/react-query";
-import { simulateSeatConflicts } from "@/mocks/concurrencyEngine";
+import { simulateSeatConflicts, startConcurrencyEngine } from "@/mocks/concurrencyEngine";
 
 interface SeatContextType {
     state: SeatState
@@ -31,6 +31,10 @@ export function SeatProvider({ children }:{children:ReactNode}) {
     const [state, dispatch] = useReducer(seatReducer, initialSeatState);
 
     const queryClient = useQueryClient();
+
+    useEffect(() => {
+        startConcurrencyEngine();   
+    },[])
 
     // Conflict simulation for every 5 seconds
     useEffect(() => {

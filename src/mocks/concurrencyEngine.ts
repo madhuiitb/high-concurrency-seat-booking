@@ -1,15 +1,13 @@
-// Every 5 seconds randomly change 1–2 seats to unavailable
-
 import { getSeats, updateSeats } from "./seatStore";
+
+let engineStarted = false;
 
 export function simulateSeatConflicts() {
   const seats = getSeats().map((seat) => ({ ...seat }));
 
   const candidates = seats.filter((seat) => seat.status === "available");
 
-  if (!candidates.length) {
-    return [];
-  }
+  if (!candidates.length) return [];
 
   const numberToBlock = Math.floor(Math.random() * 2) + 1;
 
@@ -26,12 +24,12 @@ export function simulateSeatConflicts() {
   });
 
   updateSeats(seats);
+
   return conflictedSeatIds;
 }
 
 export function releaseExpiredSeats() {
   const seats = getSeats();
-
   const now = Date.now();
 
   seats.forEach((seat) => {
@@ -48,12 +46,18 @@ export function releaseExpiredSeats() {
   updateSeats(seats);
 }
 
-setInterval(() => {
+export function startConcurrencyEngine() {
+  if (engineStarted) return;
+
+  engineStarted = true;
+
+  setInterval(() => {
     if (Math.random() < 0.2) {
       simulateSeatConflicts();
- }
-}, 25000);
+    }
+  }, 25000);
 
-setInterval(() => {
-  releaseExpiredSeats();
-}, 10000);
+  setInterval(() => {
+    releaseExpiredSeats();
+  }, 10000);
+}

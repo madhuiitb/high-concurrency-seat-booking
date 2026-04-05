@@ -11,10 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-    >
-      <body className="bg-black h-full flex flex-col">
+    <html lang="en">
+      <body className="bg-black min-h-screen flex flex-col">
         <QueryProvider>
           <SeatProvider>
             {children}

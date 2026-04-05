@@ -13,7 +13,6 @@ import SeatCell from "./SeatCell"
 import SeatLegend from "./SeatLegend"
 import SeatSelectionSummary from "./SeatSelectionSummary"
 import { useRouter } from "next/navigation"
-import useSelectedSeats from "@/hooks/useSelectedSeats"
 import useReservationTimer from "@/hooks/useReservationTimer"
 import ReservationTimer from "../common/ReservationTimer"
 
@@ -25,8 +24,6 @@ export default function SeatGrid() {
         queryFn: fetchSeats,
         refetchInterval:1000,
     })
-  
-  const { selectedSeats } = useSelectedSeats()
 
   const earlyExpiry = state.reservedSeats.length > 0 ? Math.min(...state.reservedSeats.map(seat => seat.reservedUntil)) : undefined;
 
@@ -77,14 +74,8 @@ export default function SeatGrid() {
   const hasSelection =
     state.selectedSeats.length > 0 || state.reservedSeats.length > 0;
   
-  console.log(
-    "summary: ",
-    hasSelection,
-    selectedSeats.length,
-    state.reservedSeats.length,
-  );
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6 min-h-screen">
       <div className="flex gap-8 items-center">
         <div
           className="grid gap-2"
