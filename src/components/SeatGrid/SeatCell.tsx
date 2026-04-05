@@ -1,31 +1,30 @@
 import { useSeatState } from "@/state/useSeatState";
 import { Seat } from "@/types/seat";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface SeatProps{
     seat: Seat,
 }
 export default function SeatCell({ seat }: SeatProps) {
-    const { state, dispatch } = useSeatState();
+  const { state, dispatch } = useSeatState();
+
   const isSelected =
     state.selectedSeats.includes(seat.id);
   const isReserved = state.reservedSeats.some((reservedSeat) => reservedSeat.id === seat.id);
   
   const isUnavailable = seat.status === "reserved" && !isReserved;
 
-  const queryClient = useQueryClient();
 
   const handleClick = async() => {
     if (isReserved) {
-      await fetch("/api/release-seat", {
-        method: "POST",
-        body: JSON.stringify({
-          seatIds:[seat.id],
-        })
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["seats"],
-      });
+      // await fetch("/api/release-seat", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     seatIds:[seat.id],
+      //   })
+      // });
+      // await queryClient.invalidateQueries({
+      //   queryKey: ["seats"],
+      // });
 
       dispatch({
         type: "CANCEL_RESERVATION",
@@ -35,23 +34,23 @@ export default function SeatCell({ seat }: SeatProps) {
       return;
     }
     if (!isSelected) {
-      const response = await fetch("/api/reserve-seat", {
-        method: "POST",
-        body: JSON.stringify({
-          seatIds: [seat.id]
-        })
-      });
+      // const response = await fetch("/api/reserve-seat", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     seatIds: [seat.id]
+      //   })
+      // });
 
-      const result = await response.json();
+      // const result = await response.json();
 
-      if (!result.success) {
-        alert("Some one has booked");
-        return;
-      }
+      // if (!result.success) {
+      //   alert("Some one has booked");
+      //   return;
+      // }
 
-       await queryClient.invalidateQueries({
-         queryKey: ["seats"],
-       });
+      //  await queryClient.invalidateQueries({
+      //    queryKey: ["seats"],
+      //  });
       
       dispatch({
         type: "SELECT_SEAT",

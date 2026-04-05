@@ -9,9 +9,6 @@ export async function POST(req: Request) {
 
   const reservedSeats: string[] = [];
     const failedSeats: string[] = [];
-    
-    console.log("Reserving:", seatIds);
-    console.log("Updated seat store:", seats);
 
   seatIds.forEach((id: string) => {
     const seat = seats.find((seat) => seat.id === id);
@@ -23,7 +20,7 @@ export async function POST(req: Request) {
 
     seat.status = "reserved";
 
-    seat.reservedUntil = now + 120000; // 2 minutes
+    seat.reservedUntil = now + 5*60*1000; // 2 minutes
 
     reservedSeats.push(id);
   });

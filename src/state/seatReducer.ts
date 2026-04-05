@@ -82,10 +82,15 @@ export function seatReducer(
                 selectedSeats:state.selectedSeats.filter(id=>id!==action.payload.id)
             }
         case "REMOVE_CONFLICTED_SEATS":
-            return {
-                ...state,
-                selectedSeats:state.selectedSeats.filter((seatId)=>!action.payload.includes(seatId))
-            }
+           return {
+             ...state,
+             selectedSeats: state.selectedSeats.filter(
+               (seatId) => !action.payload.includes(seatId),
+             ),
+             reservedSeats: state.reservedSeats.filter(
+               (seat) => !action.payload.includes(seat.id),
+             ),
+           };
         case "BOOKING_SUCCESS":
             return {
                 selectedSeats: [],
