@@ -1,44 +1,234 @@
-# React High-Concurrency Seat Booking Simulator
+```md
+# High Concurrency Seat Booking Simulator
 
-A frontend system-design focused ticket booking interface that simulates real-world concurrency conflicts using polling-based server state updates.
+A frontend-focused system design project that simulates
+a real-world ticket booking experience under high concurrency conditions.
 
-Tech stack:
+This project demonstrates how modern booking platforms
+-prevent double booking,
+-manage temporary seat reservations, and
+-handle seat conflicts when multiple users attempt to reserve the same seats simultaneously.
+
+🔗 Live Demo:
+https://high-concurrency-seat-booking.vercel.app/seat-map
+
+---
+
+## 🚀 Features
+
+- Interactive seat map UI
+- Seat selection & deselection flow
+- Temporary seat reservation logic
+- Conflict detection simulation (multi-user scenario)
+- Reservation expiration handling
+- Checkout confirmation workflow
+- Optimistic UI updates
+- Polling-based server-state sync simulation
+- Toast-based real-time conflict feedback
+- Responsive UI
+
+---
+
+## 🧠 System Design Concepts Demonstrated
+
+This project focuses on frontend architecture patterns used in high-concurrency booking systems such as:
+
+- Temporary seat locking
+- Conflict resolution handling
+- Preventing double booking scenarios
+- Client-side optimistic updates
+- Reservation timeout simulation
+- Server-state synchronization via polling
+- Separation of UI state vs server state
+
+These patterns are commonly used in:
+
+- Movie ticket booking platforms
+- Flight reservation systems
+- Concert ticketing platforms
+- Stadium seat allocation systems
+
+---
+
+## 🧱 Tech Stack
+
+- Next.js (App Router)
 - React
 - TypeScript
+- Tailwind CSS
 - React Query
-- Context + useReducer
-- Mock API with mutation engine
-## Getting Started
+- Context API + useReducer
+- Sonner (toast notifications)
+- Mock reservation API simulation
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📂 Project Architecture
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+src/
+├── app/
+| ├── api/
+| |  ├── book-seats
+| |  ├── release-seat
+| |  ├── reserve-seat
+| |  ├── seats
+│ ├── seat-map/
+│ ├── checkout/
+│ └── confirmation/
+│
+├── components/
+│ ├── SeatGrid/
+| |  ├── SeatGrid.tsx
+| |  ├── SeatCell.tsx
+| |  ├── SeatSelectionSummary.tsx
+| |  ├── SeatLegend.tsx
+│ └── common/
+|    ├── ReservationTimer.tsx
+│
+├── mocks/
+│ ├── concurrencyEnginge.ts
+│ ├──  generateSeats.ts
+│ ├──  mockSeatsAPI.ts
+│ └── seatStore.ts
+|
+├── state/
+│ ├── seatReducer.ts
+│ └── useSeatState.ts
+│
+├── hooks/
+│ └── useSelectedSeats.ts
+│
+├── services/
+│ └── polling-engine.ts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Architecture highlights:
 
-## Learn More
+- Reducer-driven seat state management
+- Polling-based concurrency simulation
+- Optimistic reservation flow
+- Conflict recovery logic
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔄 Booking Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
 
-## Deploy on Vercel
+Seat Map
+↓
+Select seats
+↓
+Temporary reservation
+↓
+Checkout confirmation
+↓
+Booking success
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Conflict scenario simulation:
+
+```
+
+User A selects seat A7
+User B selects seat A7
+↓
+Polling detects conflict
+↓
+Seat removed from User B selection
+↓
+Toast warning displayed
+
+```
+
+---
+
+## ⚡ Reservation Conflict Simulation
+
+The system simulates real-world concurrency conditions by:
+
+- polling seat availability periodically
+- detecting conflicting reservations
+- removing unavailable seats from local state
+- notifying users instantly
+
+This mirrors production seat-locking strategies used in large-scale booking platforms.
+
+---
+
+## 🖥️ Local Development
+
+Clone the repository:
+
+```
+
+git clone [https://github.com/madhuiitb/high-concurrency-seat-booking.git](https://github.com/madhuiitb/high-concurrency-seat-booking.git)
+
+```
+
+Install dependencies:
+
+```
+
+npm install
+
+```
+
+Run development server:
+
+```
+
+npm run dev
+
+```
+
+Visit:
+
+```
+
+[http://localhost:3000](http://localhost:3000)
+
+```
+
+---
+
+## 📦 Deployment
+
+Deployed using Vercel:
+
+```
+
+[https://high-concurrency-seat-booking.vercel.app](https://high-concurrency-seat-booking.vercel.app)
+
+```
+
+---
+
+## 🎯 Learning Goals of This Project
+
+This project demonstrates:
+
+- frontend system-design thinking
+- concurrency-safe UI architecture
+- reducer-based state modeling
+- scalable component structure
+- real-world booking workflow simulation
+
+---
+
+## 🔮 Future Improvements
+
+Possible production-ready extensions:
+
+- WebSocket-based real-time updates
+- Redis-backed seat locking service
+- Payment integration simulation
+- Multi-user session simulator
+- Reservation countdown timer UI
+- Backend API integration
+
+---
